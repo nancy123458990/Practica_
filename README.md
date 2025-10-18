@@ -1,63 +1,43 @@
-# Práctica de Integración Back-End: Laravel y PostgreSQL
+## 📝 Proceso de Implementación
 
-Este proyecto es una implementación de una API REST simple para gestionar categorías y productos, desarrollada con Laravel como parte de la práctica de integración.
+El desarrollo de esta API RESTful se llevó a cabo siguiendo una metodología estructurada, aprovechando las herramientas proporcionadas por el framework Laravel:
 
-## 📋 Requisitos
+1.  **Configuración Inicial del Entorno de Desarrollo:**
+    * Se estableció un directorio de trabajo (`Proyecto`).
+    * Dentro de este directorio, se inicializó un nuevo proyecto Laravel (`Practica_Integracion_BackEnd_Nancy`) mediante el comando `composer create-project laravel/laravel Practica_Integracion_BackEnd_Nancy`.
+    * El proyecto fue abierto y gestionado utilizando Visual Studio Code.
 
-* PHP >= 8.2
-* Composer
-* Node.js & npm (o yarn)
-* Un servidor de base de datos PostgreSQL (para desarrollo/producción) o SQLite (para testing)
+2.  **Configuración de Entorno y Base de Datos:**
+    * Se adaptó el archivo `.env` a partir de `.env.example`, configurando las credenciales para la conexión a una base de datos **PostgreSQL** denominada `practica_db`, alojada localmente y gestionada a través de pgAdmin 4.
+    * Se generó la clave de seguridad de la aplicación (`APP_KEY`) con el comando `php artisan key:generate`.
+    * Se preparó el entorno específico para pruebas creando el archivo `.env.testing`, configurándolo para utilizar una base de datos **SQLite** en memoria, asegurando así la isolation y velocidad de las pruebas automatizadas.
 
-## 🚀 Instalación y Configuración
+3.  **Diseño del Esquema y Ejecución de Migraciones:**
+    * Se diseñó el esquema relacional, definiendo las tablas `categories` y `products`.
+    * Se generaron los archivos de migración mediante `php artisan make:migration` para cada tabla. Se definieron columnas, tipos de datos, llaves primarias, índices y la relación foránea entre `products` y `categories`, incluyendo la configuración `onDelete('cascade')` para mantener la integridad referencial.
+    * Se aplicaron las migraciones a la base de datos `practica_db` utilizando `php artisan migrate`.
 
-1.  **Clonar el repositorio (si aplica):**
-    ```bash
-    git clone <tu-url-del-repositorio>
-    cd nombre-del-proyecto
-    ```
+4.  **Implementación de Modelos Eloquent:**
+    * Se crearon los modelos `Category` y `Product` utilizando `php artisan make:model`. Se definió la propiedad `$fillable` en cada modelo para habilitar la asignación masiva de atributos.
+    * Se codificaron las relaciones Eloquent correspondientes: `public function products()` (`hasMany`) en `Category` y `public function category()` (`belongsTo`) en `Product`.
 
-2.  **Instalar dependencias:**
-    ```bash
-    composer install
-    npm install
-    npm run build
-    ```
+5.  **Configuración de Rutas API:**
+    * Se detectó la ausencia inicial del archivo `routes/api.php`. Para habilitar correctamente el enrutamiento de API, se ejecutó el comando `php artisan install:api`. Esto aseguró que las rutas API fueran reconocidas por `php artisan route:list`.
+    * Se definieron las rutas para los recursos API `products` y `categories` utilizando `Route::apiResource`, vinculándolas a `ProductController` y `CategoryController` respectivamente.
 
-3.  **Configurar el entorno:**
-    * Copia el archivo de ejemplo `.env.example` a `.env`:
-        ```bash
-        cp .env.example .env
-        ```
-    * Genera la clave de aplicación:
-        ```bash
-        php artisan key:generate
-        ```
-    * **Importante:** Edita el archivo `.env` y configura los detalles de tu conexión a la base de datos **PostgreSQL** (si no lo hiciste antes). Busca las variables `DB_*` y ajústalas:
-        ```env
-        DB_CONNECTION=pgsql
-        DB_HOST=127.0.0.1  # O la IP/host de tu servidor PostgreSQL
-        DB_PORT=5432      # Puerto por defecto de PostgreSQL
-        DB_DATABASE=nombre_tu_base_de_datos
-        DB_USERNAME=tu_usuario_postgres
-        DB_PASSWORD=tu_contraseña_postgres
-        ```
-        *Asegúrate de que la base de datos `nombre_tu_base_de_datos` exista en tu servidor PostgreSQL.*
+6.  **Desarrollo de Controladores:**
+    * Se generaron los controladores `ProductController` y `CategoryController`.
+    * Se implementó la lógica completa para las operaciones **CRUD** (Create, Read, Update, Delete) en ambos controladores, manejando las peticiones `index`, `store`, `show`, `update`, y `destroy`.
+    * Se integró la **validación de datos** en `store` y `update` mediante `$request->validate()`, definiendo reglas específicas para cada campo.
+    * Se aplicó **Eager Loading** (`with('relation')` o `load('relation')`) para optimizar las consultas de base de datos al recuperar entidades con sus relaciones.
+    * Se estandarizaron las **respuestas JSON** utilizando `response()->json()` y las constantes de código de estado HTTP de `Illuminate\Http\Response`.
 
-    * Copia `.env.testing.example` a `.env.testing` (si no existe ya `.env.testing`). Este archivo ya está configurado para usar SQLite en memoria para las pruebas.
-        ```bash
-        cp .env.testing.example .env.testing # Solo si no tienes .env.testing
-        ```
+7.  **Implementación de Pruebas Automatizadas:**
+    * Se escribió una **prueba unitaria** (`tests/Unit/CategoryProductRelationshipTest.php`) para verificar la correcta implementación de la relación Eloquent entre `Category` y `Product`.
+    * Se desarrolló una **prueba de integración** (`tests/Feature/ProductApiTest.php`) para validar los endpoints de la API de productos, específicamente las operaciones de creación (`POST`) y listado (`GET`), asegurando los códigos de estado y la estructura JSON esperados.
+    * Se utilizó el trait `RefreshDatabase` en las clases de prueba para garantizar la migración y el reseteo de la base de datos (SQLite en memoria) antes de cada test.
 
-4.  **Ejecutar las migraciones:**
-    Esto creará las tablas `categories` y `products` (y otras tablas de Laravel) en tu base de datos PostgreSQL configurada en `.env`.
-    ```bash
-    php artisan migrate
-    ```
-
-## ▶️ Ejecutar la aplicación
-
-Puedes usar el servidor de desarrollo integrado de Laravel:
-
-```bash
-php artisan serve
+8.  **Verificación Final y Pruebas Manuales:**
+    * Se ejecutó el conjunto completo de pruebas automatizadas mediante `php artisan test`, confirmando su paso exitoso.
+    * Se inició el servidor de desarrollo local con `php artisan serve`.
+    * Se utilizó **Postman** para realizar pruebas manuales exhaustivas de cada endpoint CRUD para `categories` y `products`, verificando el comportamiento esperado, las respuestas JSON y los códigos de estado HTTP en escenarios de éxito y validación.
