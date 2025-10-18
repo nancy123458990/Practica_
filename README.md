@@ -1,61 +1,63 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Práctica de Integración Back-End: Laravel y PostgreSQL
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este proyecto es una implementación de una API REST simple para gestionar categorías y productos, desarrollada con Laravel como parte de la práctica de integración.
 
-## About Laravel
+## 📋 Requisitos
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+* PHP >= 8.2
+* Composer
+* Node.js & npm (o yarn)
+* Un servidor de base de datos PostgreSQL (para desarrollo/producción) o SQLite (para testing)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🚀 Instalación y Configuración
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1.  **Clonar el repositorio (si aplica):**
+    ```bash
+    git clone <tu-url-del-repositorio>
+    cd nombre-del-proyecto
+    ```
 
-## Learning Laravel
+2.  **Instalar dependencias:**
+    ```bash
+    composer install
+    npm install
+    npm run build
+    ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+3.  **Configurar el entorno:**
+    * Copia el archivo de ejemplo `.env.example` a `.env`:
+        ```bash
+        cp .env.example .env
+        ```
+    * Genera la clave de aplicación:
+        ```bash
+        php artisan key:generate
+        ```
+    * **Importante:** Edita el archivo `.env` y configura los detalles de tu conexión a la base de datos **PostgreSQL** (si no lo hiciste antes). Busca las variables `DB_*` y ajústalas:
+        ```env
+        DB_CONNECTION=pgsql
+        DB_HOST=127.0.0.1  # O la IP/host de tu servidor PostgreSQL
+        DB_PORT=5432      # Puerto por defecto de PostgreSQL
+        DB_DATABASE=nombre_tu_base_de_datos
+        DB_USERNAME=tu_usuario_postgres
+        DB_PASSWORD=tu_contraseña_postgres
+        ```
+        *Asegúrate de que la base de datos `nombre_tu_base_de_datos` exista en tu servidor PostgreSQL.*
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+    * Copia `.env.testing.example` a `.env.testing` (si no existe ya `.env.testing`). Este archivo ya está configurado para usar SQLite en memoria para las pruebas.
+        ```bash
+        cp .env.testing.example .env.testing # Solo si no tienes .env.testing
+        ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+4.  **Ejecutar las migraciones:**
+    Esto creará las tablas `categories` y `products` (y otras tablas de Laravel) en tu base de datos PostgreSQL configurada en `.env`.
+    ```bash
+    php artisan migrate
+    ```
 
-## Laravel Sponsors
+## ▶️ Ejecutar la aplicación
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Puedes usar el servidor de desarrollo integrado de Laravel:
 
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+php artisan serve
