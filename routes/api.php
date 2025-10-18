@@ -1,14 +1,20 @@
 <?php
 
-// routes/api.php
-
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\CategoryController; // <-- Asegúrate de que este 'use' exista
+use App\Http\Controllers\CategoryController;
 
-// Rutas CRUD para productos (Ya las tienes)
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "api" middleware group. Make something great!
+|
+*/
+
+// Define las rutas CRUD para productos y categorías
 Route::apiResource('products', ProductController::class);
-
-// Rutas CRUD para categorías (¡Esta es la que falta o no está bien registrada!)
 Route::apiResource('categories', CategoryController::class);

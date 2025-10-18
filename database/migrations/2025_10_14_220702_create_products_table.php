@@ -11,19 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Crea la tabla 'products'
         Schema::create('products', function (Blueprint $table) {
-            $table->id(); // Llave primaria
+            $table->id();
             $table->string('name', 150);
             $table->text('description')->nullable();
-            $table->decimal('price', 8, 2); // Precio con 8 dígitos totales y 2 decimales
+            $table->decimal('price', 8, 2);
             $table->integer('stock')->default(0);
 
-            // Llave foránea que referencia a la tabla 'categories'
+            // Define la llave foránea para category_id
             $table->foreignId('category_id')
-                  ->constrained('categories') // Se asegura que el id exista en la tabla categories
-                  ->onUpdate('cascade') // Si el id de la categoría cambia, se actualiza aquí
-                  ->onDelete('cascade'); // Si la categoría se elimina, los productos asociados también
+                  ->constrained('categories')
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade'); // Elimina productos si se elimina la categoría
 
             $table->timestamps();
         });

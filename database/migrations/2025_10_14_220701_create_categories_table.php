@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Crea la tabla 'categories' con los campos necesarios.
         Schema::create('categories', function (Blueprint $table) {
-            $table->id(); // Llave primaria autoincremental (bigint unsigned)
-            $table->string('name', 100); // Nombre de la categoría
-            $table->text('description')->nullable(); // Descripción opcional
-            $table->timestamps(); // Campos created_at y updated_at
+            $table->id();
+            $table->string('name', 100);
+            $table->text('description')->nullable();
+            $table->timestamps();
         });
     }
 

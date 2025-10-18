@@ -4,53 +4,72 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response; // Añadido para usar constantes HTTP
 
 class ProductController extends Controller
 {
-    // Mostrar todos los productos
+    /**
+     * Muestra una lista de productos.
+     */
     public function index()
     {
-        return response()->json(Product::with('category')->get());
+        // Carga los productos junto con su categoría asociada
+        $products = Product::with('category')->get();
+        return response()->json($products);
     }
 
-    // Crear un producto
+    /**
+     * Guarda un nuevo producto.
+     */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required',
-            'price' => 'required|numeric',
-            'stock' => 'required|integer',
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:150', // Ajustado max según migración
+            'description' => 'nullable|string', // Añadido tipo string
+            'price' => 'required|numeric|min:0', // Añadido min:0
+            'stock' => 'required|integer|min:0', // Añadido min:0
             'category_id' => 'required|exists:categories,id',
         ]);
 
-        $product = Product::create($validated);
-        return response()->json($product, 201);
+        $product = Product::create($validatedData);
+
+        return response()->json($product, Response::HTTP_CREATED); // 201
     }
 
-    // Mostrar un producto específico
+    /**
+     * Muestra un producto específico.
+     */
     public function show(Product $product)
     {
+        // Carga la categoría asociada antes de devolver la respuesta
         return response()->json($product->load('category'));
     }
 
-    // Actualizar un producto
+    /**
+     * Actualiza un producto existente.
+     */
     public function update(Request $request, Product $product)
     {
-        $validated = $request->validate([
-            'name' => 'sometimes|required',
-            'price' => 'sometimes|required|numeric',
-            'stock' => 'sometimes|required|integer',
+        $validatedData = $request->validate([
+            'name' => 'sometimes|required|string|max:150', // Ajustado max y añadido tipo string
+            'description' => 'nullable|string', // Añadido tipo string
+            'price' => 'sometimes|required|numeric|min:0', // Añadido min:0
+            'stock' => 'sometimes|required|integer|min:0', // Añadido min:0
             'category_id' => 'sometimes|required|exists:categories,id',
         ]);
 
-        $product->update($validated);
+        $product->update($validatedData);
+
         return response()->json($product);
     }
 
-    // Eliminar un producto
+    /**
+     * Elimina un producto.
+     */
     public function destroy(Product $product)
     {
         $product->delete();
-        return response()->json(null, 204);
+
+        return response()->json(null, Response::HTTP_NO_CONTENT); // 204
     }
 }
